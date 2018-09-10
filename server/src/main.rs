@@ -2,12 +2,17 @@
 #![plugin(rocket_codegen)]
 
 extern crate rocket;
+extern crate rocket_contrib;
 
-#[get("/")]
-fn index() -> &'static str {
-    "Hello, world!"
+#[cfg(test)]
+mod tests;
+
+use rocket_contrib::static_files::StaticFiles;
+
+fn rocket() -> rocket::Rocket {
+    rocket::ignite().mount("/", StaticFiles::from("client"))
 }
 
 fn main() {
-    rocket::ignite().mount("/", routes![index]).launch();
+    rocket().launch();
 }
