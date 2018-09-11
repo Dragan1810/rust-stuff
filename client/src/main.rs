@@ -1,3 +1,11 @@
+extern crate client;
+extern crate yew;
+
+use client::Model;
+use yew::prelude::*;
+
 fn main() {
-    println!("Hello, worlssssd!");
+    yew::initialize();
+    App::<Model>::new().mount_to_body();
+    yew::run_loop();
 }
