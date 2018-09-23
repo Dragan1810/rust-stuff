@@ -176,8 +176,6 @@ impl Model {
 
     fn view_input(&self) -> Html<Model> {
         html! {
-            // You can use standard Rust comments. One line:
-            // <li></li>
             <input class="new-todo",
                    placeholder="What needs to be done?",
                    value=&self.state.value,
@@ -185,11 +183,6 @@ impl Model {
                    onkeypress=|e| {
                        if e.key() == "Enter" { Msg::Add } else { Msg::Nope }
                    }, />
-            /* Or multiline:
-            <ul>
-                <li></li>
-            </ul>
-            */
         }
     }
 }
