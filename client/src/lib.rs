@@ -9,14 +9,9 @@ extern crate serde_derive;
 extern crate yew;
 
 use strum::IntoEnumIterator;
-use yew::format::Json;
 use yew::prelude::*;
-use yew::services::storage::{Area, StorageService};
-
-const KEY: &'static str = "yew.todomvc.self";
 
 pub struct Model {
-    storage: StorageService,
     state: State,
 }
 
@@ -54,21 +49,15 @@ impl Component for Model {
     type Properties = ();
 
     fn create(_: Self::Properties, _: ComponentLink<Self>) -> Self {
-        let mut storage = StorageService::new(Area::Local);
-        let entries = {
-            if let Json(Ok(restored_model)) = storage.restore(KEY) {
-                restored_model
-            } else {
-                Vec::new()
-            }
-        };
+        let entries = Vec::new();
+
         let state = State {
             entries,
             filter: Filter::All,
             value: "".into(),
             edit_value: "".into(),
         };
-        Model { storage, state }
+        Model { state }
     }
 
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
@@ -117,7 +106,6 @@ impl Component for Model {
             }
             Msg::Nope => {}
         }
-        self.storage.store(KEY, Json(&self.state.entries));
         true
     }
 }
