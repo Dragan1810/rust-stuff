@@ -11,6 +11,31 @@ struct Node {
     right: Link
 }
 
+impl Node {
+    fn insert(&mut self, element:i32) -> Link {
+        match self.element {
+                   // el if el == element => return false,
+                    el if el < element => {
+                        match self.right {
+                            Link::Empty => {
+                                self.right = Link::More(Box::new(Node {element, left:Link::Empty, right: Link::Empty}));
+                                return Link::Empty
+                            },
+                            Link::More(ref mut node) => {
+                                   self.right = node.insert(element);
+                                   return Link::Empty
+                            }
+                        }
+                    },
+                    el if el > element => {
+                        self.left = Link::More(Box::new(Node {element, left:Link::Empty, right: Link::Empty}));
+                        return Link::Empty
+                    },
+                    _ => return Link::Empty
+        }
+    }
+}
+
 #[derive(Debug)]
 struct BST {
     root: Link
@@ -28,27 +53,14 @@ impl BST {
                 true
                 },
             Link::More(ref mut node) => {
-
-                match node.element {
-                    el if el == element => return false,
-                    el if el < element => {
-                        node.right = Link::More(Box::new(Node {element, left:Link::Empty, right: Link::Empty}));
-                        return true
-                        },
-                    el if el > element => {
-                        node.left = Link::More(Box::new(Node {element, left:Link::Empty, right: Link::Empty}));
-                        return true
-                        },
-                    _ => return false
+                    node.insert(element);
+                    return true
                 }
             }
         }
     }
 
    // fn search(&self, element:i32) -> bool { false }
-}
-
-
 
 fn main() {
     let mut bst = BST::new();
