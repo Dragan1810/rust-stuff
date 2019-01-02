@@ -16,18 +16,18 @@ impl Node {
         Link::More(Box::new(Node {element, left:Link::Empty, right: Link::Empty}))
     }
 
-    fn insert(&mut self, element:i32) -> Link {
+    fn insert(&mut self, element:i32) -> Option<Link> {
         match self.element {
-                   // el if el == element => return false,
+                    el if el == element => None,
                     el if el < element => {
                         match self.right {
                             Link::Empty => {
                                 self.right = self.empty_node(element);
-                                return Link::Empty
+                                None
                             },
                             Link::More(ref mut node) => {
-                                   self.right = node.insert(element);
-                                   return Link::Empty
+                                self.right = node.insert(element)?;
+                                None
                             }
                         }
                     },
@@ -35,15 +35,15 @@ impl Node {
                         match self.left {
                             Link::Empty => {
                                 self.left = self.empty_node(element);
-                                return Link::Empty
+                                None
                             },
                             Link::More(ref mut node) => {
-                                   self.left = node.insert(element);
-                                   return Link::Empty
+                                   self.left = node.insert(element)?;
+                                   None
                             }
                         }
                     },
-                    _ => return Link::Empty
+                    _ => return None
         }
     }
 }
@@ -77,9 +77,10 @@ impl BST {
 fn main() {
     let mut bst = BST::new();
     bst.insert(5);
-    bst.insert(5);
     bst.insert(6);
     bst.insert(3);
+    bst.insert(4);
+    bst.insert(5);
     bst.insert(2);
     println!("{:#?}", bst)
 }
