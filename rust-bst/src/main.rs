@@ -1,49 +1,26 @@
-use std::cmp::Ordering;
+use std::cmp::PartialOrd;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, PartialOrd)]
 enum Link<T> {
     Empty,
     More(Box<Node<T>>)
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, PartialOrd)]
 struct Node<T> {
     element: T,
     left: Link<T>,
     right: Link<T>
 }
 
-impl Eq for Node<i32> {
-
-}
-
-impl Ord for Node<i32> {
-    fn cmp(&self, other: &Node<i32>) -> Ordering {
-        self.element.cmp(&other.element)
-    }
-}
-
-impl PartialEq for Node<i32> {
-    fn eq(&self, other: &Node<i32>) -> bool {
-        self.element == other.element
-    }
-}
-
-impl PartialOrd for Node<i32> {
-    fn partial_cmp(&self, other: &Node<i32>) -> Option<Ordering> {
-        Some(self.cmp(other))
-    }
-}
-
-impl<T: PartialEq + PartialOrd> Node<T> {
+impl<T: PartialOrd> Node<T> {
     fn empty_node(&mut self, element:T) -> Link<T> {
         Link::More(Box::new(Node {element, left:Link::Empty, right: Link::Empty}))
     }
 
     fn insert(&mut self, element:T) -> Option<Link<T>> {
         match self.element {
-                    el if el == element => None,
-                    el if el < element => {
+                    ref el if el < &element => {
                         match self.right {
                             Link::Empty => {
                                 self.right = self.empty_node(element);
@@ -55,7 +32,7 @@ impl<T: PartialEq + PartialOrd> Node<T> {
                             }
                         }
                     },
-                    el if el > element => {
+                    ref el if el > &element => {
                         match self.left {
                             Link::Empty => {
                                 self.left = self.empty_node(element);
@@ -77,7 +54,7 @@ struct BST<T> {
     root: Link<T>
 }
 
-impl<T> BST<T> {
+impl<T: PartialOrd> BST<T> {
     fn new() -> BST<T> {
         BST { root: Link::Empty }
     }
