@@ -12,13 +12,17 @@ struct Node {
 }
 
 impl Node {
+    fn empty_node(&mut self, element:i32) -> Link {
+        Link::More(Box::new(Node {element, left:Link::Empty, right: Link::Empty}))
+    }
+
     fn insert(&mut self, element:i32) -> Link {
         match self.element {
                    // el if el == element => return false,
                     el if el < element => {
                         match self.right {
                             Link::Empty => {
-                                self.right = Link::More(Box::new(Node {element, left:Link::Empty, right: Link::Empty}));
+                                self.right = self.empty_node(element);
                                 return Link::Empty
                             },
                             Link::More(ref mut node) => {
@@ -28,8 +32,16 @@ impl Node {
                         }
                     },
                     el if el > element => {
-                        self.left = Link::More(Box::new(Node {element, left:Link::Empty, right: Link::Empty}));
-                        return Link::Empty
+                        match self.left {
+                            Link::Empty => {
+                                self.left = self.empty_node(element);
+                                return Link::Empty
+                            },
+                            Link::More(ref mut node) => {
+                                   self.left = node.insert(element);
+                                   return Link::Empty
+                            }
+                        }
                     },
                     _ => return Link::Empty
         }
