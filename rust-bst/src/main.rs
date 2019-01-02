@@ -1,12 +1,13 @@
 use std::cmp::PartialOrd;
 
-#[derive(Debug, PartialEq, PartialOrd)]
+/*
 enum Link<T> {
     Empty,
     More(Box<Node<T>>)
 }
+*/
 
-//type Link = Option<Box<Node<T>>>;
+type Link<T> = Option<Box<Node<T>>>;
 
 #[derive(Debug, PartialEq, PartialOrd)]
 struct Node<T> {
@@ -35,18 +36,18 @@ impl<T> Iterator for IntoIter<T> {
 */
 impl<T: PartialOrd> Node<T> {
     fn empty_node(&mut self, element:T) -> Link<T> {
-        Link::More(Box::new(Node {element, left:Link::Empty, right: Link::Empty}))
+        Some(Box::new(Node {element, left:None, right: None}))
     }
 
     fn insert(&mut self, element:T) -> Option<Link<T>> {
         match self.element {
                     ref el if el < &element => {
                         match self.right {
-                            Link::Empty => {
+                            None => {
                                 self.right = self.empty_node(element);
                                 None
                             },
-                            Link::More(ref mut node) => {
+                            Some(ref mut node) => {
                                 self.right = node.insert(element)?;
                                 None
                             }
@@ -54,11 +55,11 @@ impl<T: PartialOrd> Node<T> {
                     },
                     ref el if el > &element => {
                         match self.left {
-                            Link::Empty => {
+                            None => {
                                 self.left = self.empty_node(element);
                                 None
                             },
-                            Link::More(ref mut node) => {
+                            Some(ref mut node) => {
                                    self.left = node.insert(element)?;
                                    None
                             }
@@ -76,19 +77,19 @@ struct BST<T> {
 
 impl<T: PartialOrd> BST<T> {
     fn new() -> BST<T> {
-        BST { root: Link::Empty }
+        BST { root: None }
     }
 
     fn insert(&mut self, element:T) -> bool {
       match self.root {
-            Link::Empty => {
-               self.root = Link::More(Box::new(Node {element, left:Link::Empty, right: Link::Empty}));
-                true
-                },
-            Link::More(ref mut node) => {
+            Some(ref mut node) => {
                     node.insert(element);
                     true
-                }
+                },
+            None => {
+                self.root = Some(Box::new(Node {element, left:None, right:None}));
+                true
+                },
             }
         }
     }
