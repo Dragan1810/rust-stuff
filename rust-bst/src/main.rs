@@ -15,12 +15,11 @@ struct Node<T> {
     left: Link<T>,
     right: Link<T>
 }
-/*
-type NodeI<T> = Option<Vec<Vec<String>>>;
 
-struct IntoIter<T>(NodeI<T>);
 
-impl NodeI<T> {
+struct IntoIter<T>(BST<T>);
+
+impl<T> BST<T> {
     fn into_iter(self) -> IntoIter<T> {
         IntoIter(self)
     }
@@ -29,11 +28,11 @@ impl NodeI<T> {
 impl<T> Iterator for IntoIter<T> {
     type Item = T;
     fn next(&mut self) -> Option<Self::Item> {
-        self.0.pop()
+        unimplemented!()
     } 
 }
 
-*/
+
 impl<T: PartialOrd> Node<T> {
     fn empty_node(&mut self, element:T) -> Link<T> {
         Some(Box::new(Node {element, left:None, right: None}))
@@ -65,7 +64,7 @@ impl<T: PartialOrd> Node<T> {
                             }
                         }
                     },
-                    _ => return None
+                    _ => None
         }
     }
 }
