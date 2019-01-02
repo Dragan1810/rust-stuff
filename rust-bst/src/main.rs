@@ -1,22 +1,46 @@
+use std::cmp::Ordering;
+
 #[derive(Debug)]
-enum Link {
+enum Link<T> {
     Empty,
-    More(Box<Node>)
+    More(Box<Node<T>>)
 }
 
 #[derive(Debug)]
-struct Node {
-    element: i32,
-    left: Link,
-    right: Link
+struct Node<T> {
+    element: T,
+    left: Link<T>,
+    right: Link<T>
 }
 
-impl Node {
-    fn empty_node(&mut self, element:i32) -> Link {
+impl Eq for Node<i32> {
+
+}
+
+impl Ord for Node<i32> {
+    fn cmp(&self, other: &Node<i32>) -> Ordering {
+        self.element.cmp(&other.element)
+    }
+}
+
+impl PartialEq for Node<i32> {
+    fn eq(&self, other: &Node<i32>) -> bool {
+        self.element == other.element
+    }
+}
+
+impl PartialOrd for Node<i32> {
+    fn partial_cmp(&self, other: &Node<i32>) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl<T: PartialEq + PartialOrd> Node<T> {
+    fn empty_node(&mut self, element:T) -> Link<T> {
         Link::More(Box::new(Node {element, left:Link::Empty, right: Link::Empty}))
     }
 
-    fn insert(&mut self, element:i32) -> Option<Link> {
+    fn insert(&mut self, element:T) -> Option<Link<T>> {
         match self.element {
                     el if el == element => None,
                     el if el < element => {
@@ -49,16 +73,16 @@ impl Node {
 }
 
 #[derive(Debug)]
-struct BST {
-    root: Link
+struct BST<T> {
+    root: Link<T>
 }
 
-impl BST {
-    fn new() -> Self {
+impl<T> BST<T> {
+    fn new() -> BST<T> {
         BST { root: Link::Empty }
     }
 
-    fn insert(&mut self, element:i32) -> bool {
+    fn insert(&mut self, element:T) -> bool {
       match self.root {
             Link::Empty => {
                self.root = Link::More(Box::new(Node {element, left:Link::Empty, right: Link::Empty}));
@@ -66,7 +90,7 @@ impl BST {
                 },
             Link::More(ref mut node) => {
                     node.insert(element);
-                    return true
+                    true
                 }
             }
         }
@@ -77,6 +101,7 @@ impl BST {
 fn main() {
     let mut bst = BST::new();
     bst.insert(5);
+    bst.insert(1);
     bst.insert(6);
     bst.insert(3);
     bst.insert(4);
