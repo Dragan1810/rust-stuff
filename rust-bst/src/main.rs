@@ -91,9 +91,14 @@ impl<T: PartialOrd> BST<T> {
                 },
             }
         }
+
+    fn search(&mut self, element:T) -> bool { 
+        true
+     }
+
     }
 
-   // fn search(&self, element:i32) -> bool { false }
+    
 
 fn main() {
     let mut bst = BST::new();
@@ -106,6 +111,7 @@ fn main() {
     bst.insert(2);
     println!("{:#?}", bst);
 
+    bst.search(3);
     //let mut iter = bst.into_iter();
     //println!("{:#?}", iter.next())
     
