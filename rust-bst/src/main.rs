@@ -6,13 +6,33 @@ enum Link<T> {
     More(Box<Node<T>>)
 }
 
+//type Link = Option<Box<Node<T>>>;
+
 #[derive(Debug, PartialEq, PartialOrd)]
 struct Node<T> {
     element: T,
     left: Link<T>,
     right: Link<T>
 }
+/*
+type NodeI<T> = Option<Vec<Vec<String>>>;
 
+struct IntoIter<T>(NodeI<T>);
+
+impl NodeI<T> {
+    fn into_iter(self) -> IntoIter<T> {
+        IntoIter(self)
+    }
+}
+
+impl<T> Iterator for IntoIter<T> {
+    type Item = T;
+    fn next(&mut self) -> Option<Self::Item> {
+        self.0.pop()
+    } 
+}
+
+*/
 impl<T: PartialOrd> Node<T> {
     fn empty_node(&mut self, element:T) -> Link<T> {
         Link::More(Box::new(Node {element, left:Link::Empty, right: Link::Empty}))
@@ -84,5 +104,9 @@ fn main() {
     bst.insert(4);
     bst.insert(5);
     bst.insert(2);
-    println!("{:#?}", bst)
+    println!("{:#?}", bst);
+
+    //let mut iter = bst.into_iter();
+    //println!("{:#?}", iter.next())
+    
 }
