@@ -7,7 +7,7 @@ enum Link<T> {
 }
 */
 
-type Link<T: Copy+Clone> = Option<Box<Node<T>>>;
+type Link<T> = Option<Box<Node<T>>>;
 
 #[derive(Debug, PartialEq, PartialOrd, Clone)]
 struct Node<T> {
@@ -97,9 +97,9 @@ impl<T: PartialOrd> BST<T> {
             }
         }
 
-    fn search(&mut self, element:T) -> bool { 
-        true
-     }
+    //fn search(&mut self, _element: &T) -> bool { 
+    //    true
+    // }
 
     }
 
@@ -117,7 +117,8 @@ fn main() {
     //println!("{:#?}", bst);
 
     //bst.search(3);
-    let mut iter = bst.into_iter();
-    println!("{:#?}", iter.next())
+    for e in bst.into_iter() {
+        println!("{:?}",e)
+    }
     
 }
