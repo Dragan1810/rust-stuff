@@ -7,9 +7,9 @@ enum Link<T> {
 }
 */
 
-type Link<T> = Option<Box<Node<T>>>;
+type Link<T: Copy+Clone> = Option<Box<Node<T>>>;
 
-#[derive(Debug, PartialEq, PartialOrd)]
+#[derive(Debug, PartialEq, PartialOrd, Clone)]
 struct Node<T> {
     element: T,
     left: Link<T>,
@@ -17,6 +17,8 @@ struct Node<T> {
 }
 
 
+
+#[derive(Debug)]
 struct IntoIter<T>(BST<T>);
 
 impl<T> BST<T> {
@@ -28,7 +30,10 @@ impl<T> BST<T> {
 impl<T> Iterator for IntoIter<T> {
     type Item = T;
     fn next(&mut self) -> Option<Self::Item> {
-        unimplemented!()
+        match self.0.root.take() {
+            Some(node) => Some(node.element),
+            _ => None
+        }
     } 
 }
 
@@ -69,7 +74,7 @@ impl<T: PartialOrd> Node<T> {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct BST<T> {
     root: Link<T>
 }
@@ -109,10 +114,10 @@ fn main() {
     bst.insert(4);
     bst.insert(5);
     bst.insert(2);
-    println!("{:#?}", bst);
+    //println!("{:#?}", bst);
 
-    bst.search(3);
-    //let mut iter = bst.into_iter();
-    //println!("{:#?}", iter.next())
+    //bst.search(3);
+    let mut iter = bst.into_iter();
+    println!("{:#?}", iter.next())
     
 }
