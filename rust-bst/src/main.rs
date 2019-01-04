@@ -16,6 +16,10 @@ struct Node<T> {
     right: Link<T>
 }
 
+struct Iter<'a,T: 'a> {
+    next: Option<&'a Node<T>>,
+}
+
 
 
 #[derive(Debug)]
@@ -24,6 +28,23 @@ struct IntoIter<T>(BST<T>);
 impl<T> BST<T> {
     fn into_iter(self) -> IntoIter<T> {
         IntoIter(self)
+    }
+
+    fn iter<'a>(&'a self) -> Iter<'a, T> {
+        // |node| &**node ???
+        Iter {
+            next: self.root.as_ref().map(|node| &**node)
+        }
+    }
+}
+
+impl<'a, T> Iterator for Iter<'a, T> {
+    type Item = &'a T;
+    fn next(&mut self) -> Option<Self::Item> {
+        self.next.map(| node | {
+            &node.element
+
+        })
     }
 }
 
@@ -114,7 +135,7 @@ fn main() {
     //println!("{:#?}", bst);
 
     //bst.search(3);
-    for e in bst.into_iter() {
+    for e in bst.iter() {
         println!("{:?}",e)
     }
     
