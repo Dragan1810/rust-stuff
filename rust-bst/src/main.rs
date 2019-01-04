@@ -30,10 +30,7 @@ impl<T> BST<T> {
 impl<T> Iterator for IntoIter<T> {
     type Item = T;
     fn next(&mut self) -> Option<Self::Item> {
-        match self.0.root.take() {
-            Some(node) => Some(node.element),
-            _ => None
-        }
+        self.0.root.take().map(|node| node.element) 
     } 
 }
 
