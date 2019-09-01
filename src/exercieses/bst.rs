@@ -1,11 +1,11 @@
+/*
 use std::cmp::PartialOrd;
 
-/*
+
 enum Link<T> {
     Empty,
     More(Box<Node<T>>)
 }
-*/
 
 pub type Link<T> = Option<Box<Node<T>>>;
 
@@ -117,3 +117,5 @@ impl<T: PartialOrd> BST<T> {
     //    true
     // }
 }
+
+*/
